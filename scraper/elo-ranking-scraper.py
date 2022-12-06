@@ -5,9 +5,7 @@ driver = webdriver.Chrome()
 driver.implicitly_wait(10)
 driver.get('https://www.eloratings.net/')
 
-teamData = driver.find_elements(By.CLASS_NAME, 'ui-widget-content')
-
-# print(teamData[0].text)
+team_data = driver.find_elements(By.CLASS_NAME, 'ui-widget-content')
 
 # {
 #     rank: 1,
@@ -27,3 +25,44 @@ teamData = driver.find_elements(By.CLASS_NAME, 'ui-widget-content')
 #     total_goals_scored: 2237,
 #     total_goals_conceded: 914
 # }
+
+team_dictionaries = []
+
+for team in team_data:
+  arr = team.text.split('\n')
+
+  # clean data
+  for i, _ in enumerate(arr):
+    if i == 5 or i == 6:
+      if len(arr[i]) > 1:
+        arr[i] = arr[i].replace('+', '')
+        # change minus to hyphen (look the same but aren't)
+        arr[i] = arr[i].replace('−', '-')
+      
+      arr[i] = int(arr[i])
+    elif i != 1:
+      arr[i] = int(arr[i])
+  
+  # create a dictionary
+  team_dict = {
+    'rank': arr[0],
+    'name': arr[1],
+    'rating': arr[2],
+    'avg_rank': arr[3],
+    'avg_rating': arr[4],
+    '1_yr_rank_chg': arr[5],
+    '1_yr_rating_chg': arr[6],
+    'total_games': arr[7],
+    'total_home_games': arr[8],
+    'total_away_games': arr[9],
+    'total_neutral_games': arr[10],
+    'total_wins': arr[11],
+    'total_losses': arr[12],
+    'total_draws': arr[13],
+    'total_goals_scored': arr[14],
+    'total_goals_conceded': arr[15]
+  }
+
+  team_dictionaries.append(team_dict)
+
+print(team_dictionaries)
