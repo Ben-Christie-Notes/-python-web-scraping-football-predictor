@@ -1,11 +1,13 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
-driver = webdriver.Chrome()
-driver.implicitly_wait(10)
-driver.get('https://www.eloratings.net/')
+def get_data():
+  driver = webdriver.Chrome()
+  driver.implicitly_wait(10)
+  driver.get('https://www.eloratings.net/')
 
-team_data = driver.find_elements(By.CLASS_NAME, 'ui-widget-content')
+  team_data = driver.find_elements(By.CLASS_NAME, 'ui-widget-content')
+  return team_data
 
 # {
 #     rank: 1,
@@ -26,11 +28,7 @@ team_data = driver.find_elements(By.CLASS_NAME, 'ui-widget-content')
 #     total_goals_conceded: 914
 # }
 
-team_dictionaries = []
-
-for team in team_data:
-  arr = team.text.split('\n')
-
+def clean_data(arr):
   # clean data
   for i, _ in enumerate(arr):
     if i == 5 or i == 6:
@@ -42,7 +40,8 @@ for team in team_data:
       arr[i] = int(arr[i])
     elif i != 1:
       arr[i] = int(arr[i])
-  
+
+def create_dict(arr):
   # create a dictionary
   team_dict = {
     'rank': arr[0],
@@ -63,6 +62,19 @@ for team in team_data:
     'total_goals_conceded': arr[15]
   }
 
-  team_dictionaries.append(team_dict)
+  return team_dict
 
-print(team_dictionaries)
+
+def prep_data():
+  team_dictionaries = []
+  team_data = get_data()
+
+  for team in team_data:
+    arr = team.text.split('\n')
+    clean_data(arr)
+
+    team_dict = create_dict(arr)
+    
+    team_dictionaries.append(team_dict)
+  
+  return team_dictionaries
