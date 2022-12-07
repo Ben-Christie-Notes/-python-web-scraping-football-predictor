@@ -7,6 +7,9 @@ def get_data():
   driver.get('https://www.eloratings.net/')
 
   team_data = driver.find_elements(By.CLASS_NAME, 'ui-widget-content')
+
+  driver.close()
+  
   return team_data
 
 # {

@@ -9,4 +9,3 @@ df = pd.DataFrame(team_data)
 df.set_index('rank', inplace = True)
 
 
-
